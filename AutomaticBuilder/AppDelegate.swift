@@ -11,7 +11,7 @@ import Cocoa
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
 
-    fileprivate let statusItem = NSStatusBar.system().statusItem(withLength: NSSquareStatusItemLength)
+    fileprivate let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
     fileprivate let popover = NSPopover()
     fileprivate var eventMonitor: EventMonitor?
 
@@ -19,7 +19,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     // MARK: - Application Methods
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         if let button = statusItem.button {
-            button.image = NSImage(named: "builder")
+            button.image = NSImage(named: NSImage.Name(rawValue: "builder"))
             button.action = #selector(togglePopover)
         }
         

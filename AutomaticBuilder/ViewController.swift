@@ -69,7 +69,7 @@ class ViewController: NSViewController {
             dialog.canCreateDirectories = false
             dialog.allowedFileTypes = ["xcodeproj", "xcworkspace"]
             
-            if (dialog.runModal() == NSModalResponseOK) {
+            if (dialog.runModal() == .OK) {
                 addProject(path: dialog.url?.path)
             }
         } else {
@@ -167,7 +167,7 @@ extension ViewController: NSTableViewDelegate, NSTableViewDataSource {
         
         let rowName = projectNames[row]
         
-        if let cell = tableView.make(withIdentifier: cellIdentifier, owner: nil) as? NSTableCellView {
+        if let cell = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: cellIdentifier), owner: nil) as? NSTableCellView {
             if tableColumn == tableView.tableColumns[0] {
                 cell.textField?.stringValue = rowName.capitalized
             }
@@ -213,9 +213,9 @@ extension ViewController {
     
     static func controller() -> ViewController {
         
-        let storyboard = NSStoryboard(name: "Main", bundle: nil) 
+        let storyboard = NSStoryboard(name: NSStoryboard.Name(rawValue: "Main"), bundle: nil) 
         
-        let viewController = storyboard.instantiateController(withIdentifier: "mainViewController") as! ViewController
+        let viewController = storyboard.instantiateController(withIdentifier: NSStoryboard.SceneIdentifier(rawValue: "mainViewController")) as! ViewController
         
         return viewController
     }
