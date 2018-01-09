@@ -97,7 +97,7 @@ class ViewController: NSViewController {
     }
     
     @IBAction func testFlightPressed(sender: AnyObject) {
-        callScriptForCurrent(releaseType: "testFlight")
+        callScriptForCurrent(releaseType: "test_flight")
     }
     
     @IBAction func releasePressed(sender: AnyObject) {
@@ -138,15 +138,13 @@ class ViewController: NSViewController {
             
             let uploadForItunesValue = ""//releaseType == "release" ? "FASTLANE_ITUNES_TRANSPORTER_USE_SHELL_SCRIPT=1 " : ""
             
-            let releaseNotes = releaseType == "fabric" ? " notes:'\(releaseText)'" : ""
-            
             if let projectPath = projectPaths[projectName] {
                 let script =
                       "tell application \"Terminal\" \n"
                     + " set newTab to do script \"cd \(projectPath)\" \n"
                     + " delay 1 \n"
 //                    + " set newWindow to first window of (every window whose tabs contains newTab) \n"
-                    + " set output to do script \"\(uploadForItunesValue)fastlane \(releaseType)\(releaseNotes)\" in newTab \n"
+                    + " set output to do script \"\(uploadForItunesValue)fastlane \(releaseType) notes:'\(releaseText)'\" in newTab \n"
 //                    + " repeat \n"
 //                    + "  delay 3 \n"
 //                    + "  if exists newTab \n"
