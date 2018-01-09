@@ -10,8 +10,8 @@ import Cocoa
 
 class ViewController: NSViewController {
 
-    @IBOutlet fileprivate weak var pathField: NSTextField!
     @IBOutlet fileprivate weak var projects: NSTableView!
+    @IBOutlet fileprivate weak var releaseTextView: NSTextView!
     
     fileprivate var selectedRow = -1
     
@@ -57,28 +57,47 @@ class ViewController: NSViewController {
         super.viewDidLoad()
         
         projects.backgroundColor = NSColor.clear
+        releaseTextView.backgroundColor = NSColor.clear
+        releaseTextView.textColor = NSColor.highlightColor
     }
     
-    @IBAction fileprivate func browseFile(sender: AnyObject) {
+    @IBAction fileprivate func close(sender: AnyObject) {
+        NSApplication.shared.terminate(self)
+    }
+    
+    @IBAction fileprivate func addProject(sender: AnyObject) {
         
-        if pathField.stringValue.isEmpty {
-            let dialog = NSOpenPanel()
-            
-            dialog.title = "Choose a .xcodeproj or .xcworkspace file"
-            dialog.prompt = "Add"
-            dialog.canCreateDirectories = false
-            dialog.allowedFileTypes = ["xcodeproj", "xcworkspace"]
-            
-            if (dialog.runModal() == .OK) {
-                addProject(path: dialog.url?.path)
-            }
-        } else {
-            addProject(path: pathField.stringValue)
+        let dialog = NSOpenPanel()
+        
+        dialog.message = "Choose a .xcodeproj or .xcworkspace file"
+        dialog.prompt = "Add"
+        dialog.canCreateDirectories = false
+        dialog.allowedFileTypes = ["xcodeproj", "xcworkspace"]
+        
+        if (dialog.runModal() == .OK) {
+            addProject(path: dialog.url?.path)
         }
     }
     
-    @IBAction func betaPressed(sender: AnyObject) {
-        callScriptForCurrent(releaseType: "beta")
+    @IBAction fileprivate func removeProject(sender: AnyObject) {
+        
+        if selectedRow != -1 {
+            let projectName = projectNames[selectedRow]
+            
+            var newPaths = projectPaths
+            
+            newPaths[projectName] = nil
+            
+            projectPaths = newPaths;
+        }
+    }
+    
+    @IBAction func fabricPressed(sender: AnyObject) {
+        callScriptForCurrent(releaseType: "fabric")
+    }
+    
+    @IBAction func testFlightPressed(sender: AnyObject) {
+        callScriptForCurrent(releaseType: "testFlight")
     }
     
     @IBAction func releasePressed(sender: AnyObject) {
@@ -111,13 +130,23 @@ class ViewController: NSViewController {
     fileprivate func callScriptForCurrent(releaseType: String) {
         
         if selectedRow != -1 {
+            let releaseText = releaseTextView.string.isEmpty ? "Distributed with Automatic Builder!" : releaseTextView.string
+            
+            releaseTextView.string = ""
+            
             let projectName = projectNames[selectedRow]
             
+            let uploadForItunesValue = ""//releaseType == "release" ? "FASTLANE_ITUNES_TRANSPORTER_USE_SHELL_SCRIPT=1 " : ""
+            
+            let releaseNotes = releaseType == "fabric" ? " notes:'\(releaseText)'" : ""
+            
             if let projectPath = projectPaths[projectName] {
-                let script = "tell application \"Terminal\" \n"
+                let script =
+                      "tell application \"Terminal\" \n"
                     + " set newTab to do script \"cd \(projectPath)\" \n"
-                    + " set newWindow to first window of (every window whose tabs contains newTab) \n"
-                    + " set output to do script \"fastlane \(releaseType)\" in newTab \n"
+                    + " delay 1 \n"
+//                    + " set newWindow to first window of (every window whose tabs contains newTab) \n"
+                    + " set output to do script \"\(uploadForItunesValue)fastlane \(releaseType)\(releaseNotes)\" in newTab \n"
 //                    + " repeat \n"
 //                    + "  delay 3 \n"
 //                    + "  if exists newTab \n"
@@ -190,21 +219,6 @@ extension ViewController: NSTableViewDelegate, NSTableViewDataSource {
         selectedRow = projects.selectedRow
         
         projects.reloadData()
-    }
-}
-
-
-extension ViewController: NSTextFieldDelegate {
-    
-    func control(_ control: NSControl, textView: NSTextView, doCommandBy commandSelector: Selector) -> Bool {
-        
-        if commandSelector == #selector(NSResponder.insertNewline(_:)) {
-            addProject(path: textView.string)
-            
-            return true
-        }
-        
-        return false
     }
 }
 

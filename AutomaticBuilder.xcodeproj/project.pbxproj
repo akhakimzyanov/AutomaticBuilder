@@ -277,6 +277,7 @@
 				DEVELOPMENT_TEAM = 3388Z85852;
 				INFOPLIST_FILE = "$(SRCROOT)/AutomaticBuilder/SupportingFiles/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.12.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.akhakimzyanov.AutomaticBuilder;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
@@ -292,6 +293,7 @@
 				DEVELOPMENT_TEAM = 3388Z85852;
 				INFOPLIST_FILE = "$(SRCROOT)/AutomaticBuilder/SupportingFiles/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.12.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.akhakimzyanov.AutomaticBuilder;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
